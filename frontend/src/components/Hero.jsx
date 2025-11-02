@@ -1,9 +1,9 @@
 import React from 'react'
 import {assets} from '../assets/assets'
-
+import {motion} from 'framer-motion'
 const Hero = () => {
   return (
-    <div className='flex flex-col sm:flex-row border border-gray-400'>
+    <motion.div className='flex flex-col sm:flex-row border border-gray-400' initial={{opacity:0,y:'-50px'}} animate={{opacity:1,y:'0px'}} transition={{delay:0.2,duration:0.5}}>
         {/* Hero left side */}
         <div className='w-full sm:w-1/2 flex items-center justify-center py-10 sm:py-0'>
             <div className='text-[#414141]'>
@@ -20,7 +20,7 @@ const Hero = () => {
         </div>
         {/* hero right side */}
         <img src={assets.hero_img} className='w-full sm:w-1/2' />
-    </div>
+    </motion.div>
   )
 }
 

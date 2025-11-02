@@ -15,7 +15,7 @@ const ShopContextProvider = (props)=>{
     const [products,setProducts] = useState([])
     const [token,setToken] = useState('')
     const navigate = useNavigate()
-    
+    const [dropdown,setDropDown] = useState(false)
 
     const addToCart = async (itemId,size) =>{
 
@@ -155,6 +155,8 @@ const ShopContextProvider = (props)=>{
         updateQuantity,
         getCartAmount,
         navigate,
+        dropdown,
+        setDropDown,
         backendUrl,
         setToken,
         token

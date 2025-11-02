@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
-  const { token, setToken, navigate, backendUrl, setCartItems } =
+  const { token, setToken, navigate, backendUrl, setCartItems,setDropDown } =
     useContext(ShopContext);
 
   const [name, setName] = useState("");
@@ -25,7 +25,8 @@ const Login = () => {
           toast.success(res.data.message);
           setToken(res.data.token);
           localStorage.setItem("token", res.data.token);
-          // setCartItems(res.data.cartItems)
+          setCartItems(res.data.cartItems)
+          setDropDown(false)
         } else {
           console.log(res.data.message);
           toast.error(res.data.message);
@@ -40,7 +41,9 @@ const Login = () => {
           toast.success(res.data.message);
           setToken(res.data.token);
           localStorage.setItem("token", res.data.token);
-          // setCartItems(res.data.cartItems)
+          setCartItems(res.data.cartItems)
+          setDropDown(false)
+          
         } else {
           toast.error(res.data.message);
         }

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
+import {  Link } from "react-router-dom";
 
 const List = ({ token }) => {
   const [list, setList] = useState([]);
@@ -39,6 +40,7 @@ const List = ({ token }) => {
       toast.error(error.message);
     }
   };
+
   useEffect(() => {
     fetchList();
   }, [list]);
@@ -72,12 +74,20 @@ const List = ({ token }) => {
                 {currency}
                 {item.price}
               </p>
-              <p
-                className="text-right md:text-center cursor-pointer text-lg"
-                onClick={() => productRemove(item._id)}
+              <div
+                className="flex justify-around cursor-pointer items-center"
+                onClick={() => {
+                  setPopUp(true), productUpdate(item._id);
+                }}
               >
-                X
-              </p>
+                <Link to={`/update/${item._id}`}>EDIT</Link>
+                <p
+                  onClick={() => productRemove(item._id)}
+                  className="text-right md:text-center cursor-pointer text-lg"
+                >
+                  X
+                </p>
+              </div>
             </div>
           ))
         ) : (
@@ -89,5 +99,4 @@ const List = ({ token }) => {
     </>
   );
 };
-
 export default List;

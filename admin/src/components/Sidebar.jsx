@@ -28,6 +28,8 @@ const Sidebar = () => {
           <img className="w-5 h-5" src={assets.order_icon} />
           <p className="hidden md:block">Orders</p>
         </NavLink>
+
+        
       </div>
     </div>
   );

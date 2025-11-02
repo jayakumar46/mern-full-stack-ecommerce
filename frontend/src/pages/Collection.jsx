@@ -18,6 +18,7 @@ const Collection = () => {
     } else {
       setCategory((prev) => [...prev, e.target.value]);
     }
+
   };
 
   const toggleSubCategory = (e) => {
@@ -26,6 +27,7 @@ const Collection = () => {
     } else {
       setSubCategory((prev) => [...prev, e.target.value]);
     }
+   
   };
 
   const applyFilter = () => {
@@ -50,6 +52,7 @@ const Collection = () => {
     }
 
     seFilterProducts(productsCopy);
+   
   };
 
   const sortProducts = () => {
