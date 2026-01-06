@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { assets } from "../assets/assets.js";
+import { assets } from "../assets/assets";
 const Sidebar = () => {
   return (
     <div className="w-[18%] min-h-screen border-r-2 border-gray-300">

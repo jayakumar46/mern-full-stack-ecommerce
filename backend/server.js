@@ -1,4 +1,5 @@
 import express from "express";
+import './jobs/retry-payment.js'
 import cors from "cors";
 import "dotenv/config";
 import connectDB from "./config/mongodb.js";
@@ -10,9 +11,11 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 //app config
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8000;
 connectDB();
 connectCloudinary();
+
+app.use("/api/order/webhook", express.raw({ type: "application/json" }));
 
 //middlewares
 

@@ -5,11 +5,13 @@ import { Route, Routes } from "react-router-dom";
 import Add from "./pages/Add";
 import List from "./pages/List";
 import Orders from "./pages/Orders";
-import Update from "./pages/Update";
+// import Update from "./pages/Update";
 import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+console.log(backendUrl);
+
 export const currency = "₹";
 const App = () => {
   const [token, setToken] = useState(
@@ -34,7 +36,7 @@ const App = () => {
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/orders" element={<Orders token={token} />} />
-                <Route path="/update/:id" element={<Update token={token} />} />
+                {/* <Route path="/update/:id" element={<Update token={token} />} /> */}
               </Routes>
             </div>
           </div>

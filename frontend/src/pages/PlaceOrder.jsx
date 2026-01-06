@@ -6,6 +6,19 @@ import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+      resolve(true)
+    }
+    script.onerror = () => {
+      reject(new Error("Something is not right!"))
+    }
+    document.body.appendChild(script);
+  })
+}
 const PlaceOrder = () => {
   const {
     navigate,
@@ -38,6 +51,81 @@ const PlaceOrder = () => {
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
+
+  const placeRazorpayOrder = async (orderData) => {
+    try {
+      const res = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+
+      if (!res) {
+        alert("Razorpay SDK failed to load");
+        return;
+      }
+
+
+
+      const response = await axios.post(
+        backendUrl + "/api/order/razorpay",
+        orderData,
+        { headers: { token } }
+      );
+
+      const { order, key } = response.data;
+
+      if (!order?.id) {
+        alert("Order creation failed");
+        return;
+      }
+
+      const options = {
+        key,
+        amount: order.amount,      // paise
+        currency: order.currency,
+        order_id: order.id,
+        image: orderData?.items.length === 1 ? orderData?.items?.[0]?.image?.[0] : null,
+        name: "Buysho",
+        description: "Order Payment",
+
+        handler: function () {
+          // ❌ don't confirm order here
+          toast.success("Payment processing...");
+          setTimeout(()=>{
+            navigate("/orders")
+          },3000)
+        },
+
+        method: {
+          upi: true,
+        },
+        prefill: {
+          vpa: "success@razorpay", // test upi
+        },
+        notes: {
+          orderType: "product",
+        },
+
+        theme: {
+          color: "#d62d90",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on("payment.failed", function () {
+        toast.error("Payment failed or cancelled");
+        
+      });
+
+      rzp.open();
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -62,6 +150,8 @@ const PlaceOrder = () => {
         items: orderItems,
         amount: getCartAmount() + delivery_fee,
       };
+
+
 
       switch (method) {
         //api calls for cod method
@@ -91,13 +181,17 @@ const PlaceOrder = () => {
           } else {
             toast.error(resStripe.data.message);
           }
+          break;
+        case "razorpay":
+          console.log("hoii");
 
+          placeRazorpayOrder(orderData);
           break;
 
         default:
           break;
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   return (
     <form
@@ -213,9 +307,8 @@ const PlaceOrder = () => {
               className="flex items-center gap-3 border border-gray-300 pb-3 p-2 px-3 cursor-pointer"
             >
               <p
-                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${
-                  method === "stripe" ? "bg-green-400" : ""
-                }`}
+                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${method === "stripe" ? "bg-green-400" : ""
+                  }`}
               ></p>
               <img src={assets.stripe_logo} className="h-5 mx-4" />
             </div>
@@ -224,9 +317,8 @@ const PlaceOrder = () => {
               className="flex items-center gap-3 border border-gray-300 pb-3 p-2 px-3 cursor-pointer "
             >
               <p
-                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${
-                  method === "razorpay" ? "bg-green-400" : ""
-                }`}
+                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${method === "razorpay" ? "bg-green-400" : ""
+                  }`}
               ></p>
               <img src={assets.razorpay_logo} className="h-5 mx-4" />
             </div>
@@ -235,9 +327,8 @@ const PlaceOrder = () => {
               className="flex items-center gap-3 border border-gray-300 p-2 px-3 cursor-pointer"
             >
               <p
-                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${
-                  method === "cod" ? "bg-green-400" : ""
-                }`}
+                className={`min-w-3 h-3.5 border border-gray-50 rounded-full ${method === "cod" ? "bg-green-400" : ""
+                  }`}
               ></p>
               <p className="text-gray-500 text-sm font-mediummx-4">
                 CASH ON DELIVERY

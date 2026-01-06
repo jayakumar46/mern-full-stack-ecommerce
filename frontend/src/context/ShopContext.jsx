@@ -9,6 +9,7 @@ const ShopContextProvider = (props)=>{
     const currency = '₹';
     const delivery_fee = 20;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
+    
     const [search, setSearch] = useState('');
     const [showSearch,setShowSearch] = useState(false)
     const [cartItems,setCartItems] = useState({})
@@ -122,6 +123,8 @@ const ShopContextProvider = (props)=>{
             const res = await axios.post(backendUrl+'/api/cart/get',{},{headers:{token}})
             if(res.data.success){
                 setCartItems(res.data.cartData)
+                
+                
             }
         } catch (error) {
             console.log(error);
@@ -131,7 +134,7 @@ const ShopContextProvider = (props)=>{
 
     useEffect(()=>{
         getProductsData()
-    },[products])
+    },[])
 
     useEffect(()=>{
         if(!token && localStorage.getItem('token')){
